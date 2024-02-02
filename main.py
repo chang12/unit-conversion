@@ -16,24 +16,6 @@ class Unit:
         return self.name
 
 
-def find(
-        a: Unit,
-        b: Unit,
-        curr: Unit,
-        r: float,
-) -> float:
-    if b.name == curr.name:
-        return r
-    else:
-        for unit, rr in a.edges.values():
-            find(
-                a,
-                b,
-                unit,
-                r * rr,
-            )
-
-
 def convert(
         conversion_rates: List[Tuple[str, str, float]],
         a_to_b: (str, str),
