@@ -19,7 +19,7 @@ class Unit:
 def convert(
         conversion_rates: List[Tuple[str, str, float]],
         a_to_b: (str, str),
-):
+) -> float:
     units: Dict[str, Unit] = {}
     for conversion_rate in conversion_rates:
         a, b, r = conversion_rate
@@ -58,8 +58,10 @@ def convert(
 
     if feasible:
         print(f'{a.name} = {r} {b.name}')
+        return r
     else:
         print('infeasible.')
+        raise ValueError(f'{a.name} 을 {b.name} 으로 변환 하는 것이 불가능.')
 
 
 if __name__ == '__main__':
