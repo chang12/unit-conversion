@@ -16,10 +16,19 @@ class Unit:
         return self.name
 
 
+class Rate:
+    feasible: bool
+    value: float
+
+    def __init__(self, feasible: bool, value: float = None):
+        self.feasible = feasible
+        self.value = value
+
+
 def convert(
         conversion_rates: List[Tuple[str, str, float]],
         a_to_b: (str, str),
-) -> float:
+) -> Rate:
     units: Dict[str, Unit] = {}
     for conversion_rate in conversion_rates:
         a, b, r = conversion_rate
@@ -57,21 +66,6 @@ def convert(
                 break
 
     if feasible:
-        print(f'{a.name} = {r} {b.name}')
-        return r
+        return Rate(feasible=True, value=r)
     else:
-        print('infeasible.')
-        raise ValueError(f'{a.name} 을 {b.name} 으로 변환 하는 것이 불가능.')
-
-
-if __name__ == '__main__':
-    conversion_rates: List[Tuple[str, str, float]] = [
-        ('foot', 'inch', 12),
-        ('inch', 'yard', 0.0277778),
-        ('km', 'm', 1000),
-    ]
-
-    convert(
-        conversion_rates,
-        ('foot', 'm'),
-    )
+        return Rate(feasible=False)
