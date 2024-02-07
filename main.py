@@ -1,4 +1,4 @@
-from typing import List, Tuple, Dict
+from typing import List, Tuple, Dict, Set
 
 
 class Unit:
@@ -48,22 +48,29 @@ def convert(
 
     a = units[a]
     b = units[b]
-    curr = a
-    r = 1.0
-    to_visit: List[Tuple[Unit, r]] = []
+    curr: Unit
+    r: float
+    to_visit: List[Tuple[Unit, float]] = [(a, 1.0)]
+    visited: Set[str] = set()
     feasible = False
 
     while True:
+        if len(to_visit) == 0:
+            break
+        else:
+            curr, r = to_visit.pop(0)
+
+        if curr.name in visited:
+            continue
+        else:
+            visited.add(curr.name)
+
         if curr.name == b.name:
             feasible = True
             break
         else:
             for neighbor, rr in curr.edges.values():
                 to_visit.append((neighbor, r * rr))
-            try:
-                curr, r = to_visit.pop(0)
-            except IndexError:
-                break
 
     if feasible:
         return Rate(feasible=True, value=r)

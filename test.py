@@ -37,6 +37,17 @@ class Test(unittest.TestCase):
 
         self.assertEqual(50.0, rate.value)
 
+    def test_infeasible(self):
+        rate = convert(
+            conversion_rates=[
+                ('a', 'b', 10.0),
+                ('x', 'y', 5.0),
+            ],
+            a_to_b=('a', 'y'),
+        )
+
+        self.assertFalse(rate.feasible)
+
 
 if __name__ == '__main__':
     unittest.main()
