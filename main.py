@@ -1,4 +1,4 @@
-from typing import List, Tuple, Dict
+from typing import List, Tuple, Dict, Set
 
 
 class Unit:
@@ -16,10 +16,19 @@ class Unit:
         return self.name
 
 
+class Rate:
+    feasible: bool
+    value: float
+
+    def __init__(self, feasible: bool, value: float = None):
+        self.feasible = feasible
+        self.value = value
+
+
 def convert(
         conversion_rates: List[Tuple[str, str, float]],
         a_to_b: (str, str),
-):
+) -> Rate:
     units: Dict[str, Unit] = {}
     for conversion_rate in conversion_rates:
         a, b, r = conversion_rate
@@ -39,37 +48,31 @@ def convert(
 
     a = units[a]
     b = units[b]
-    curr = a
-    r = 1.0
-    to_visit: List[Tuple[Unit, r]] = []
+    curr: Unit
+    r: float
+    to_visit: List[Tuple[Unit, float]] = [(a, 1.0)]
+    visited: Set[str] = set()
     feasible = False
 
     while True:
+        if len(to_visit) == 0:
+            break
+        else:
+            curr, r = to_visit.pop(0)
+
+        if curr.name in visited:
+            continue
+        else:
+            visited.add(curr.name)
+
         if curr.name == b.name:
             feasible = True
             break
         else:
             for neighbor, rr in curr.edges.values():
                 to_visit.append((neighbor, r * rr))
-            try:
-                curr, r = to_visit.pop(0)
-            except IndexError:
-                break
 
     if feasible:
-        print(f'{a.name} = {r} {b.name}')
+        return Rate(feasible=True, value=r)
     else:
-        print('infeasible.')
-
-
-if __name__ == '__main__':
-    conversion_rates: List[Tuple[str, str, float]] = [
-        ('foot', 'inch', 12),
-        ('inch', 'yard', 0.0277778),
-        ('km', 'm', 1000),
-    ]
-
-    convert(
-        conversion_rates,
-        ('foot', 'm'),
-    )
+        return Rate(feasible=False)
