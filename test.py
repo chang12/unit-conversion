@@ -15,6 +15,28 @@ class Test(unittest.TestCase):
 
         self.assertEqual(1.0, rate)
 
+    def test_feasible1(self):
+        rate = convert(
+            conversion_rates=[
+                ('a', 'b', 10.0),
+                ('a', 'c', 5.0),
+            ],
+            a_to_b=('b', 'c'),
+        )
+
+        self.assertEqual(0.5, rate)
+
+    def test_feasible2(self):
+        rate = convert(
+            conversion_rates=[
+                ('a', 'b', 10.0),
+                ('b', 'c', 5.0),
+            ],
+            a_to_b=('a', 'c'),
+        )
+
+        self.assertEqual(50.0, rate)
+
 
 if __name__ == '__main__':
     unittest.main()
